@@ -1,7 +1,7 @@
 {
   "name": "oauth-nextjs",
   "version": "0.5.0",
-  "description": "Next.js SDK for signing in with Oauth",
+  "description": "Next.js SDK for signing in through Oauth with specific configuration options",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "browser": "dist/index.browser.js",
@@ -30,9 +30,9 @@
   "author": "Auth0 (https://auth0.com)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/auth0/nextjs-auth0/issues"
+    "url": "https://github.com/sarahpads-redspace/oauth-nextjs/issues"
   },
-  "homepage": "https://github.com/auth0/nextjs-auth0#readme",
+  "homepage": "https://github.com/sarahpads-redspace/oauth-nextjs",
   "devDependencies": {
     "@panva/jose": "^1.9.2",
     "@types/cookie": "^0.3.3",
@@ -60,7 +60,7 @@
     "typescript": "^3.6.4"
   },
   "dependencies": {
-    "@hapi/iron": "^5.1.4",
+    "@hapi/iron": "6.0.0",
     "base64url": "^3.0.1",
     "cookie": "^0.4.0",
     "openid-client": "^3.7.4"

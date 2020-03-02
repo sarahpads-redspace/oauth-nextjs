@@ -46,6 +46,7 @@ export default class CookieSessionStore implements ISessionStore {
     const {
       idToken, accessToken, refreshToken, user, createdAt
     } = session;
+
     const persistedSession = new Session(user, createdAt);
 
     if (this.settings.storeIdToken && idToken) {
@@ -61,6 +62,7 @@ export default class CookieSessionStore implements ISessionStore {
     }
 
     const encryptedSession = await Iron.seal(persistedSession, cookieSecret, Iron.defaults);
+
     setCookie(req, res, {
       name: cookieName,
       value: encryptedSession,
