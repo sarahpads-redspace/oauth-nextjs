@@ -1,7 +1,7 @@
 {
   "name": "oauth-nextjs",
   "version": "0.5.0",
-  "description": "Next.js SDK for signing in through Oauth for IBMId and YL services",
+  "description": "Next.js SDK for signing in through Oauth with specific configuration options",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "browser": "dist/index.browser.js",
