@@ -75,5 +75,5 @@ export default interface IAuth0Settings {
   /*
    * Function to format and retrieve the user object to be stored in the cookie
    */
-  formatUserObject: (user: any) => any;
+  serializeUser: (user: any) => any;
 }

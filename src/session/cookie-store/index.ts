@@ -63,7 +63,7 @@ export default class CookieSessionStore implements ISessionStore {
 
     const encryptedSession = await Iron.seal(persistedSession, cookieSecret, Iron.defaults);
 
-    await setCookie(req, res, {
+    setCookie(req, res, {
       name: cookieName,
       value: encryptedSession,
       path: cookiePath,

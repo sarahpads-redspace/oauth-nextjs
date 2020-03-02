@@ -58,7 +58,7 @@ export default function callbackHandler(
       delete claims.iss;
     }
 
-    const user = settings.formatUserObject ? settings.formatUserObject(claims) : claims;
+    const user = settings.serializeUser ? settings.serializeUser(claims) : claims;
 
     // Create the session.
     const session: ISession = {
