@@ -71,4 +71,9 @@ export default interface IAuth0Settings {
    * Settings for the OIDC Client which performs the code exchange.
    */
   oidcClient?: OidcClientSettings;
+
+  /*
+   * Function to format and retrieve the user object to be stored in the cookie
+   */
+  formatUserObject: (user: any) => any;
 }

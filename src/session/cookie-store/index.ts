@@ -18,20 +18,25 @@ export default class CookieSessionStore implements ISessionStore {
    * @param req HTTP request
    */
   async read(req: IncomingMessage): Promise<ISession | null> {
-    const { cookieSecret, cookieName } = this.settings;
+    try {
+      const { cookieSecret, cookieName } = this.settings;
 
-    const cookies = parseCookies(req);
-    const cookie = cookies[cookieName];
-    if (!cookie || cookie.length === 0) {
+      const cookies = parseCookies(req);
+      const cookie = cookies[cookieName];
+      if (!cookie || cookie.length === 0) {
+        return null;
+      }
+
+      const unsealed = await Iron.unseal(cookies[cookieName], cookieSecret, Iron.defaults);
+      if (!unsealed) {
+        return null;
+      }
+
+      return unsealed as ISession;
+    } catch (error) {
+      console.error(error);
       return null;
     }
-
-    const unsealed = await Iron.unseal(cookies[cookieName], cookieSecret, Iron.defaults);
-    if (!unsealed) {
-      return null;
-    }
-
-    return unsealed as ISession;
   }
 
   /**
@@ -39,33 +44,39 @@ export default class CookieSessionStore implements ISessionStore {
    * @param req HTTP request
    */
   async save(req: IncomingMessage, res: ServerResponse, session: ISession): Promise<void> {
-    const {
-      cookieSecret, cookieName, cookiePath, cookieLifetime
-    } = this.settings;
+    try {
+      const {
+        cookieSecret, cookieName, cookiePath, cookieLifetime
+      } = this.settings;
 
-    const {
-      idToken, accessToken, refreshToken, user, createdAt
-    } = session;
-    const persistedSession = new Session(user, createdAt);
+      const {
+        idToken, accessToken, refreshToken, user, createdAt
+      } = session;
 
-    if (this.settings.storeIdToken && idToken) {
-      persistedSession.idToken = idToken;
+      const persistedSession = new Session(user, createdAt);
+
+      if (this.settings.storeIdToken && idToken) {
+        persistedSession.idToken = idToken;
+      }
+
+      if (this.settings.storeAccessToken && accessToken) {
+        persistedSession.accessToken = accessToken;
+      }
+
+      if (this.settings.storeRefreshToken && refreshToken) {
+        persistedSession.refreshToken = refreshToken;
+      }
+
+      const encryptedSession = await Iron.seal(persistedSession, cookieSecret, Iron.defaults);
+
+      await setCookie(req, res, {
+        name: cookieName,
+        value: encryptedSession,
+        path: cookiePath,
+        maxAge: cookieLifetime
+      });
+    } catch (error) {
+      console.error(error);
     }
-
-    if (this.settings.storeAccessToken && accessToken) {
-      persistedSession.accessToken = accessToken;
-    }
-
-    if (this.settings.storeRefreshToken && refreshToken) {
-      persistedSession.refreshToken = refreshToken;
-    }
-
-    const encryptedSession = await Iron.seal(persistedSession, cookieSecret, Iron.defaults);
-    setCookie(req, res, {
-      name: cookieName,
-      value: encryptedSession,
-      path: cookiePath,
-      maxAge: cookieLifetime
-    });
   }
 }
