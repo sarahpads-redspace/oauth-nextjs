@@ -60,6 +60,9 @@ export default function callbackHandler(
 
     const user = settings.serializeUser ? settings.serializeUser(claims) : claims;
 
+    console.log('Pre formatted user object');
+    console.log(claims);
+    
     // Create the session.
     const session: ISession = {
       user,
